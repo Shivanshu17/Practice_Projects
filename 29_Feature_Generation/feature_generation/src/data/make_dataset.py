@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import requests
+import csv
 import click
 import logging
 from pathlib import Path
@@ -12,6 +14,12 @@ def main(input_filepath, output_filepath):
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
+    data_url  = "https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews/download"
+    data_response = requests.get(data_url)
+    url_content = data_response.content
+    csv_file = open('../../data/raw/IMDB Dataset.csv', 'wb')
+    csv_file.write(url_content)
+    csv_file.close()
     logger = logging.getLogger(__name__)
     logger.info('making final data set from raw data')
 
