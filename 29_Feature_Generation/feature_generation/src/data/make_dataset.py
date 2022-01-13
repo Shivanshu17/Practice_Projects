@@ -4,20 +4,29 @@ import csv
 import click
 import logging
 from pathlib import Path
+import os
 from dotenv import find_dotenv, load_dotenv
 
 
 @click.command()
-@click.argument('input_filepath', type=click.Path(exists=True))
-@click.argument('output_filepath', type=click.Path())
-def main(input_filepath, output_filepath):
+#@click.argument('input_filepath', type=click.Path(exists=True))
+#@click.argument('output_filepath', type=click.Path())
+def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
         cleaned data ready to be analyzed (saved in ../processed).
     """
     data_url  = "https://www.kaggle.com/lakshmi25npathi/imdb-dataset-of-50k-movie-reviews/download"
+    #data_url = "https://github.com/laxmimerit/IMDB-Movie-Reviews-Large-Dataset-50k/blob/master/train.xlsx"
     data_response = requests.get(data_url)
     url_content = data_response.content
-    csv_file = open('../../data/raw/IMDB Dataset.csv', 'wb')
+    dirname = os.path.dirname(__file__)
+    data_path = os.path.join(dirname, '../../data/raw/')
+    file_name = 'imdb_dataset.csv'
+    complete_name = os.path.join(data_path, file_name)
+    # #data_path = "../../data/raw/IMDB Dataset.csv"
+    # is_path = os.path.isdir(data_path)
+    # print(is_path)
+    csv_file = open(complete_name, 'wb')
     csv_file.write(url_content)
     csv_file.close()
     logger = logging.getLogger(__name__)
