@@ -1,14 +1,21 @@
 from re import X
 import nltk
+import os
 nltk.download('stopwords')
 nltk.download('wordnet')
 
 import pandas as pd
+import numpy as np
 from nltk.stem import WordNetLemmatizer
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from sklearn.feature_extraction.text import TfidfVectorizer
 
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from tqdm import tqdm
+
+from gensim.models.wrappers import FastText
 
 ## For Index Based
 
@@ -103,3 +110,26 @@ def get_tfidf_features(X_train):
         X_train.rename(columns={col: col_map[col]}, inplace=True)
     return X_train
 
+
+
+def get_glove_embedding(text):
+    token = Tokenizer()
+    token.fit_on_texts(text)
+    seq = token.texts_to_sequences(text)
+    pad_seq = pad_sequences(seq,maxlen=300)
+    vocab_size = len(token.word_index)+1
+    embedding_vector = {}
+    f = open('../input/embeddings/glove.840B.300d/glove.840B.300d.txt')     ### To Do: Change this so that it takes from environment variable
+    for line in tqdm(f):
+        value = line.split(' ')
+        word = value[0]
+        coef = np.array(value[1:],dtype = 'float32')
+        embedding_vector[word] = coef
+
+
+
+def get_fastext_embeddding(text):
+    model = FastText.load_fasttext_format('wiki.simple')
+    # This seems like the code to train fastext (rather than using pretrained?)
+    ## Will have to see if the embedding layer needs to be added directly onto the model, or is their a way to do this cleanly.
+    
