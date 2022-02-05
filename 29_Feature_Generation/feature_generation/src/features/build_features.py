@@ -111,6 +111,7 @@ def get_tfidf_features(X_train):
     return X_train
 
 
+## For Glove Embedding
 
 def get_glove_embedding(text):
     token = Tokenizer()
@@ -128,8 +129,10 @@ def get_glove_embedding(text):
 
 
 
-def get_fastext_embeddding(text):
+## For FastText
+
+def get_fasttext_embeddding(text):
     model = FastText.load_fasttext_format('wiki.simple')
     # This seems like the code to train fastext (rather than using pretrained?)
     ## Will have to see if the embedding layer needs to be added directly onto the model, or is their a way to do this cleanly.
-    
+
